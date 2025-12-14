@@ -121,7 +121,7 @@ def report(
         f.write(f"- Слишком много колонок: **{quality_flags['too_many_columns']}**\n")
         f.write(f"- Слишком много пропусков: **{quality_flags['too_many_missing']}**\n")
         f.write(f"- Есть ли колонки, где все значения одинаковые: **{quality_flags['has_constant_columns']}**\n")
-        f.write(f"- Есть ли колонки, где есть значения одинаковые в user_id: **{quality_flags['has_suspicious_id_duplicates']}**\n\n")
+        f.write(f"- Проверка, что идентификатор (например, user_id) уникален: **{quality_flags['has_suspicious_id_duplicates']}**\n\n")
 
         f.write("## Колонки\n\n")
         f.write("См. файл `summary.csv`.\n\n")

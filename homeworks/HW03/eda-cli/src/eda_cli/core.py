@@ -189,7 +189,15 @@ def compute_quality_flags(summary: DatasetSummary, missing_df: pd.DataFrame) -> 
         if col.name == 'user_id' and col.unique < summary.n_rows:
             flags["has_suspicious_id_duplicates"] = True
         break
-    # Простейший «скор» качества
+
+    high_cardinality_cols = []
+    for col in summary.columns:
+        if not col.is_numeric and summary.n_rows > 0:
+            uniqueness_ratio = col.unique / summary.n_rows
+            if uniqueness_ratio > 0.9:  # порог можно параметризовать позже
+                high_cardinality_cols.append(col.name)
+                flags["has_high_cardinality_categoricals"] = len(high_cardinality_cols) > 0
+                flags["high_cardinality_columns"] = high_cardinality_cols  # опционально: список имён
     score = 1.0
     score -= max_missing_share  # чем больше пропусков, тем хуже
     if summary.n_rows < 100:
