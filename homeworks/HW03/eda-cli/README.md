@@ -41,6 +41,13 @@ uv run eda-cli overview data/example.csv
 uv run eda-cli report data/example.csv --out-dir reports
 uv run eda-cli report data/example.csv --out-dir reports_example  --max-hist-columns 3 --title "Заголовок"
 ```
+Параметры:
+
+- `--out-dir` – каталог для отчёта.
+- `--sep` – разделитель (по умолчанию `,`).
+- `--encoding` – кодировка (по умолчанию `utf-8`).
+- `--max-hist-columns` – максимум числовых колонок для гистограмм (по умолчанию `6`).
+- `--title` – заголовок отчёта (по умолчанию `EDA-отчёт`).
 
 В результате в каталоге `reports/` появятся:
 
@@ -52,6 +59,7 @@ uv run eda-cli report data/example.csv --out-dir reports_example  --max-hist-col
 - `hist_*.png` – гистограммы числовых колонок;
 - `missing_matrix.png` – визуализация пропусков;
 - `correlation_heatmap.png` – тепловая карта корреляций.
+
 
 
 ## Тесты
