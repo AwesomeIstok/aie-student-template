@@ -192,12 +192,13 @@ def compute_quality_flags(summary: DatasetSummary, missing_df: pd.DataFrame) -> 
 
     high_cardinality_cols = []
     for col in summary.columns:
-        if not col.is_numeric and summary.n_rows > 0:
+        if not col.is_numeric:  
             uniqueness_ratio = col.unique / summary.n_rows
-            if uniqueness_ratio > 0.9:  # порог можно параметризовать позже
+            if uniqueness_ratio > 0.9:
                 high_cardinality_cols.append(col.name)
-                flags["has_high_cardinality_categoricals"] = len(high_cardinality_cols) > 0
-                flags["high_cardinality_columns"] = high_cardinality_cols  # опционально: список имён
+
+    flags["has_high_cardinality_categoricals"] = len(high_cardinality_cols) > 0
+    flags["high_cardinality_columns"] = high_cardinality_cols 
     score = 1.0
     score -= max_missing_share  # чем больше пропусков, тем хуже
     if summary.n_rows < 100:
@@ -205,9 +206,15 @@ def compute_quality_flags(summary: DatasetSummary, missing_df: pd.DataFrame) -> 
     if summary.n_cols > 100:
         score -= 0.1
 
+    if (len(high_cardinality_cols) > 0):
+        score -= 0.1
+
+    if ((sum(1 for col in summary.columns if col.unique <= 1)) > 0):
+        score -= 0.5
+
     score = max(0.0, min(1.0, score))
     flags["quality_score"] = score
-
+    
     return flags
 
 

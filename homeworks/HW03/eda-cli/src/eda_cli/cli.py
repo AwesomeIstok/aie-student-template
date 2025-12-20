@@ -67,7 +67,9 @@ def report(
     sep: str = typer.Option(",", help="Разделитель в CSV."),
     encoding: str = typer.Option("utf-8", help="Кодировка файла."),
     max_hist_columns: int = typer.Option(6, help="Максимум числовых колонок для гистограмм."),
+    top_k_categories: int = typer.Option(5, help="Сколько top-значений выводить для категориальных признаков"),
     title: Optional[str] = typer.Option(None, help="Заголовок отчёта (по умолчанию: 'EDA-отчёт')."),
+
 ) -> None:
     """
     Сгенерировать полный EDA-отчёт:
@@ -87,7 +89,7 @@ def report(
     summary_df = flatten_summary_for_print(summary)
     missing_df = missing_table(df)
     corr_df = correlation_matrix(df)
-    top_cats = top_categories(df)
+    top_cats = top_categories(df, top_k=top_k_categories)
 
     # 2. Качество в целом
     quality_flags = compute_quality_flags(summary, missing_df)
@@ -122,6 +124,8 @@ def report(
         f.write(f"- Слишком много пропусков: **{quality_flags['too_many_missing']}**\n")
         f.write(f"- Есть ли колонки, где все значения одинаковые: **{quality_flags['has_constant_columns']}**\n")
         f.write(f"- Проверка, что идентификатор (например, user_id) уникален: **{quality_flags['has_suspicious_id_duplicates']}**\n\n")
+        f.write(f"- Флаг, сигнализирующий, что есть категориальные признаки с очень большим числом уникальных значений (0.9): **{quality_flags['has_high_cardinality_categoricals']}**\n\n")
+        f.write(f"- Категориальные признаки: **{quality_flags['high_cardinality_columns']}**\n")
 
         f.write("## Колонки\n\n")
         f.write("См. файл `summary.csv`.\n\n")
@@ -142,6 +146,7 @@ def report(
         if not top_cats:
             f.write("Категориальные/строковые признаки не найдены.\n\n")
         else:
+            f.write(f"Количество выводимых top_categories: {top_k_categories}\n\n")
             f.write("См. файлы в папке `top_categories/`.\n\n")
 
         f.write("## Гистограммы числовых колонок\n\n")
