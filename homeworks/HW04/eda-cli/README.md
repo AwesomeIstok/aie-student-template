@@ -1,4 +1,4 @@
-# S03 – eda_cli: мини-EDA для CSV
+# S04 – eda_cli: мини-EDA для CSV
 
 Небольшое CLI-приложение для базового анализа CSV-файлов.
 Используется в рамках Семинара 03 курса «Инженерия ИИ».
@@ -67,3 +67,21 @@ uv run eda-cli report data/example.csv --out-dir reports_example  --max-hist-col
 ```bash
 uv run pytest -q
 ```
+
+## HTTP-сервис
+Запуск сервиса:
+```bash
+uv run uvicorn eda_cli.api:app --reload --port 8000
+```
+URL после запуска сервиса 127.0.0.1:8000/docs
+Системный эндпоинт:
+
+/health – простой health проверка сервиса.
+Эндпоинты качества:
+
+/quality - принимает агрегированные признаки датасета и возвращает эвристическую оценку качества.
+/quality-from-csv - Эндпоинт, который принимает CSV-файл, запускает EDA-ядро (summarize_dataset + missing_table + compute_quality_flags) и возвращает оценку качества данных.
+/quality-flags-from-csv - Эндпоинт, который принимает CSV-файл, запускает EDA-ядро (summarize_dataset + missing_table + compute_quality_flags) и возвращает набов флагов качества данных.
+Эндпоинт по выводу данных csv:
+
+/head - Эндпоинт, который принимает CSV-файл, параметр n (число выводимых строк) и возвращает первых n строк данных.
