@@ -60,7 +60,6 @@ S07-hw-dataset-04.csv
 
 - KMeans (k подбирался в диапазоне)
 - DBSCAN (eps, min_samples) — для датасетов 1 и 4
-- AgglomerativeClustering (k, linkage) — для датасетов 1-4
 
 Опционально: третий метод / дополнительные варианты параметров.
 
